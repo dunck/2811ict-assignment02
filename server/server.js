@@ -39,29 +39,17 @@ var data = {
     'groups': [
         {
             'name':'group1',
-            'id': 1,
-            'admins':['ryomaohira'],
+            'admins':['ryoma'],
             'members':['member1']
         }
     ],
     'rooms':[
-        {'name': 'room1', 'group_id': -1},
-        {'name': 'room1', 'group_id': 1},
+        {'name': 'room1', 'group':'group1', 'members':['ryoma','member1']},
+        {'name': 'room1', 'group': 'group1', 'members':['ryoma']},
     ]
 }
-
-app.post('/api/login', function(req, res){
-   let username = req.body.username; 
-   let users = data.users;
-   let match = false;
-   for(let i = 0; i < users.length; i++){
-       if(users[i].username == username){
-           match = users[i];
-       }
-   }
-
-   res.send(match);
-});
+// Login Module
+require('./login.js')(app, data);
 
 // the "index" route, which serves the Angular app
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
