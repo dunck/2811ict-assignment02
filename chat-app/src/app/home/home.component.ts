@@ -12,15 +12,12 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    if(sessionStorage.getItem('username') === null){
+    if(sessionStorage.getItem('user') === null){
       // User has not logged in, reroute to login
       this.router.navigate(['/login']);
     } else {
       let user = JSON.parse(sessionStorage.getItem('user'));
-      console.log(user.member);
       this.groups = user.member;
-      console.log(this.groups);
-
     }
   }
 
