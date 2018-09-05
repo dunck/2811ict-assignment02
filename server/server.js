@@ -51,9 +51,9 @@ var data = {
             'members':['member2', 'ryoma']
         },
     ],
-    'rooms':[
-        {'name': 'room1', 'group':'group1', 'members':['ryoma','member1']},
-        {'name': 'room1', 'group': 'group1', 'members':['ryoma']},
+    'channels':[
+        {'name': 'room1', 'group':'Griffith Innovate', 'members':['ryoma','member1']},
+        {'name': 'room2', 'group': 'Griffith Innovate', 'members':['ryoma']},
     ]
 }
 // Login Module

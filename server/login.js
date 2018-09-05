@@ -45,6 +45,35 @@ module.exports = function(app, data){
             }
         }
 
+        // Grab the channels for each group
+        for(let i = 0; i < groups.length; i++){
+            let channels = getChannels(username, groups[i], groups[i].role);
+            groups[i].channels = channels;
+        }
         return groups;
+    }
+
+    function getChannels(username, group, role){
+        channels = [];
+        // Go through all the channels
+        for(let i = 0; i < data.channels.length; i++){
+            // Check to see if the channel matches the current group
+            if(data.channels[i].group == group.name){
+                if(group.role >= 1){
+                    channels.push(data.channels[i]);
+                } else {
+                    // Channel belongs to group, check for access
+                    let channel = data.channels[i];
+                    for(let j = 0; j < channel.members.length; j++){
+                        if(username == channel.members[j]){
+                            channels.push(channel);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return channels;
     }
 }
