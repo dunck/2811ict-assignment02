@@ -41,8 +41,20 @@ var data = {
         {'name': 'room1', 'group_id': -1},
         {'name': 'room1', 'group_id': 1},
     ]
-
 }
+
+app.post('/api/login', function(req, res){
+   let username = req.body.username; 
+   let users = data.users;
+   let match = false;
+   for(let i = 0; i < users.length; i++){
+       if(users[i].username == username){
+           match = users[i];
+       }
+   }
+
+   res.send(match);
+});
 
 // the "index" route, which serves the Angular app
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
