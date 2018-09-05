@@ -24,7 +24,12 @@
 <div class="container h-100">
   <div class="row" style="width: 100%">
       <div class="col-lg-1">
-        Groups go here
+        <div class="btn-group-vertical" data-toggle="buttons">
+          <ng-container *ngFor="let group of groups">
+            <button type="button" *ngIf="group.role == 0" class="btn btn-outline-success">{{ group.name }}</button>
+            <button type="button" *ngIf="group.role == 1" class="btn btn-primary">{{ group.name }}</button>
+          </ng-container>
+        </div>
       </div>
       <div class="col-lg-3">
         Channels go here

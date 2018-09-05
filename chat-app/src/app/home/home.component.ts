@@ -19,7 +19,9 @@ export class HomeComponent implements OnInit {
     } else {
       let user = JSON.parse(sessionStorage.getItem('user'));
       this.user = user;
-      this.groups = user.member;
+      this.groups = user.groups;
+
+      console.log(this.groups);
     }
   }
 
