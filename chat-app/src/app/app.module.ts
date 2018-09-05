@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { ChannelsComponent } from './channels/channels.component';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
-    ChannelsComponent
+    ChannelsComponent,
+    ChatComponent
   ],
   imports: [
     HttpClientModule,
