@@ -27,7 +27,7 @@ module.exports = function(app, data){
         for(let i = 0; i < data.groups.length; i++){
             let admins = data.groups[i].admins;
             for(let j = 0; j < admins.length; j++){
-                if(username == admins[i]){
+                if(username == admins[j]){
                     data.groups[i].role = 1;
                     groups.push(data.groups[i]);
                 }
@@ -38,7 +38,7 @@ module.exports = function(app, data){
         for(let i = 0; i < data.groups.length; i++){
             let members = data.groups[i].members;
             for(let j = 0; j < members.length; j++){
-                if(username == members[i]){
+                if(username == members[j]){
                     data.groups[i].role = 0;
                     groups.push(data.groups[i]);
                 }

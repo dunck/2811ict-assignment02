@@ -38,10 +38,18 @@ var data = {
     ],
     'groups': [
         {
-            'name':'group1',
+            'name':'Griffith Innovate',
             'admins':['ryoma'],
             'members':['member1']
-        }
+        },{
+            'name':'2811ICT',
+            'admins':['super'],
+            'members':['member1','ryoma']
+        },{
+            'name':'1701ICT',
+            'admins':['group'],
+            'members':['member2', 'ryoma']
+        },
     ],
     'rooms':[
         {'name': 'room1', 'group':'group1', 'members':['ryoma','member1']},
