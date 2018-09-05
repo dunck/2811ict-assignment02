@@ -15,11 +15,14 @@ app.use(cors(corsOptions))
 var data = {
     'users': [
         {
-            'username':'ryomaohira',
+            'username':'ryoma',
             'permissions':2,
         },{
-            'username':'superadmin',
+            'username':'super',
             'permissions':2,
+        },{
+            'username':'group',
+            'permissions':1,
         },{
             'username':'member1',
             'permissions':0,
