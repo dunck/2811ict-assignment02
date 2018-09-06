@@ -59,7 +59,21 @@ var data = {
     ]
 }
 // Login Module
-require('./login.js')(app, data);
+const login = require('./login.js')();
+const groups = require('./groups.js')();
+
+app.post('/api/login', function(req, res){
+    let username = req.body.username; 
+    login.data = data;
+    let match = login.findUser(username);
+
+    if(match !== false){
+        groups.data = data;
+        match.groups = groups.getGroups(username);
+    }
+    res.send(match);
+});
+
 
 // the "index" route, which serves the Angular app
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
@@ -75,7 +89,8 @@ app.get('/home', function(req,res){
 app.get('/api/users', function(req,res){
     res.send(data.users);
 });
-app.get('/api/groups', function(req,res){
+app.post('/api/groups', function(req,res){
+    let username = req.body.username;
     res.send(data.groups);
 });
 app.get('/api/rooms', function(req,res){
