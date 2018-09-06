@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit {
 
       console.log(this.groups);
     }
-  }
+    }
 
   logout(){
     console.log('logout()');
@@ -41,6 +41,7 @@ export class HomeComponent implements OnInit {
         this.selectedGroup = this.groups[i];
       }
     }
+    this.channels = this.selectedGroup.channels;
   }
 
   getChannels(groupName){

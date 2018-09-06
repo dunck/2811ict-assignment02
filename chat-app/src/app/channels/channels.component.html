@@ -1,3 +1,4 @@
-<p>
-  channels works!
-</p>
+<div class="btn-group-vertical" style="width: 100%">
+    <p *ngIf="channels.length == 0" style="width: 100%;text-align:center">No channels available</p>
+    <button *ngFor="let channel of channels" type="button" class="btn btn-primary">{{ channel.name }}</button>
+  </div>

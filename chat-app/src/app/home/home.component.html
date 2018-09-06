@@ -24,15 +24,15 @@
 <div class="container h-100">
   <div class="row" style="width: 100%">
       <div class="col-lg-2">
-        <div class="btn-group-vertical" data-toggle="buttons">
+        <div class="btn-group-vertical" style="width: 100%">
           <ng-container *ngFor="let group of groups">
             <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success">{{ group.name }}</button>
-            <button type="button" *ngIf="group.role == 1" (click)="openGroup(group.name)" class="btn btn-primary">{{ group.name }}</button>
+            <button type="button" *ngIf="group.role == 1" (click)="openGroup(group.name)" class="btn btn-outline-primary">{{ group.name }}</button>
           </ng-container>
         </div>
       </div>
       <div class="col-lg-3">
-        <app-channels></app-channels>
+        <app-channels [channels]=channels [group]=selectedGroup></app-channels>
       </div>
       <div class="col-lg-5">
           <app-chat></app-chat>
