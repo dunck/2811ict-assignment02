@@ -2,6 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express(); 
+const fs = require('fs');
+const dataFile = './data.json';
+const dataFormat = 'utf8';
+
 
 // CORS
 const cors = require('cors')
@@ -12,66 +16,29 @@ var corsOptions = {
 app.use(cors(corsOptions))
 
 
+
 // Body-Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var data = {
-    'users': [
-        {
-            'username':'ryoma',
-            'permissions':2,
-        },{
-            'username':'super',
-            'permissions':2,
-        },{
-            'username':'group',
-            'permissions':1,
-        },{
-            'username':'member1',
-            'permissions':0,
-        },{
-            'username':'member2',
-            'permissions':0,
-        },
-
-    ],
-    'groups': [
-        {
-            'name':'Griffith Innovate',
-            'admins':['ryoma'],
-            'members':['member1']
-        },{
-            'name':'2811ICT',
-            'admins':['super'],
-            'members':['member1','ryoma']
-        },{
-            'name':'1701ICT',
-            'admins':['group'],
-            'members':['member2']
-        },
-    ],
-    'channels':[
-        {'name': 'Events', 'group':'Griffith Innovate', 'members':['ryoma','member1']},
-        {'name': 'Admin Chat', 'group': 'Griffith Innovate', 'members':['ryoma']},
-        {'name': 'Lab Help', 'group': '2811ICT', 'members':['ryoma','member1','member2']},
-        {'name': 'Assignment Help', 'group': '2811ICT', 'members':['member1','member2']},
-    ]
-}
+//var data = 
 // Login Module
 const login = require('./login.js')();
 const groups = require('./groups.js')();
 
 app.post('/api/login', function(req, res){
-    let username = req.body.username; 
-    login.data = data;
-    let match = login.findUser(username);
-
-    if(match !== false){
-        groups.data = data;
-        match.groups = groups.getGroups(username, match.permissions);
-    }
-    res.send(match);
+    fs.readFile(dataFile, dataFormat, function(err, data){
+        data = JSON.parse(data);
+        let username = req.body.username; 
+        login.data = data;
+        let match = login.findUser(username);
+    
+        if(match !== false){
+            groups.data = data;
+            match.groups = groups.getGroups(username, match.permissions);
+        }
+        res.send(match);
+    });
 });
 
 
