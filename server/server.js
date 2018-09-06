@@ -52,8 +52,10 @@ var data = {
         },
     ],
     'channels':[
-        {'name': 'room1', 'group':'Griffith Innovate', 'members':['ryoma','member1']},
-        {'name': 'room2', 'group': 'Griffith Innovate', 'members':['ryoma']},
+        {'name': 'Events', 'group':'Griffith Innovate', 'members':['ryoma','member1']},
+        {'name': 'Admin Chat', 'group': 'Griffith Innovate', 'members':['ryoma']},
+        {'name': 'Lab Help', 'group': '2811ICT', 'members':['ryoma','member1','member2']},
+        {'name': 'Assignment Help', 'group': '2811ICT', 'members':['member1','member2']},
     ]
 }
 // Login Module
