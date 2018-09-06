@@ -53,6 +53,7 @@ export class HomeComponent implements OnInit {
         found = true;
       }
     }
+    console.log('selectedchannel:');
     console.log(this.selectedChannel);
     return found;
   }

@@ -43,8 +43,12 @@
           <app-chat [channel]=selectedChannel></app-chat>
       </div>
       <div class="col-lg-2">
-        <h3 style="text-align:center; width:100%">Users</h3>
-        Users go here
+        <h3>Users</h3>
+        <ng-container *ngIf="selectedChannel != null" >
+            <p *ngFor="let member of selectedChannel.members">
+              {{ member }}
+            </p>
+        </ng-container>
       </div>
     </div>
 </div>
