@@ -1,7 +1,7 @@
 
-<div *ngIf="channel != null" class="card mb-3" style="height: 500px; overflow-y:scroll">
+<div *ngIf="channel != null" class="card mb-3">
     <h3 class="card-header">{{channel.name}}</h3>
-    <div class="card-body">
+    <div class="card-body" style="height: 500px; overflow-y:scroll">
       <p class="card-text">
         ryoma: message
       </p>
@@ -13,6 +13,9 @@
       </p>
     </div>
     <div class="card-footer text-muted">
-      2 days ago
+      <div class="form-inline">
+          <input class="form-control" style="width:calc(100% - 100px)">
+          <button class="btn btn-primary" style="width:100px">enter</button>
+      </div>
     </div>
   </div>
