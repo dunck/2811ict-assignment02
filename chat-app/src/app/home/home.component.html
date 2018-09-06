@@ -40,10 +40,11 @@
         <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)"></app-channels>
       </div>
       <div class="col-lg-5">
-          <app-chat [channel]=selectedChannel></app-chat>
+        <h3 style="text-align:center; width:100%">Chat</h3>
+        <app-chat [channel]=selectedChannel></app-chat>
       </div>
       <div class="col-lg-2">
-        <h3>Users</h3>
+        <h3 style="text-align:center; width:100%">Users</h3>
         <ng-container *ngIf="selectedChannel != null" >
             <p *ngFor="let member of selectedChannel.members">
               {{ member }}
