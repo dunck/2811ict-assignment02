@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 export class HomeComponent implements OnInit {
   public user;
   public selectedGroup;
+  public selectedChannel;
   public groups = [];
   public channels = [];
 
@@ -44,6 +45,17 @@ export class HomeComponent implements OnInit {
     this.channels = this.selectedGroup.channels;
   }
 
+  channelChangedHandler(name){
+    let found:boolean = false;
+    for(let i = 0; i < this.channels.length; i++){
+      if(this.channels[i].name == name){
+        this.selectedChannel = this.channels[i];
+        found = true;
+      }
+    }
+    console.log(this.selectedChannel);
+    return found;
+  }
   getChannels(groupName){
     let channels = [];
     return channels;

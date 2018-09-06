@@ -32,10 +32,10 @@
         </div>
       </div>
       <div class="col-lg-3">
-        <app-channels [channels]=channels [group]=selectedGroup></app-channels>
+        <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)"></app-channels>
       </div>
       <div class="col-lg-5">
-          <app-chat></app-chat>
+          <app-chat [channel]=selectedChannel></app-chat>
       </div>
       <div class="col-lg-2">
         Users go here
