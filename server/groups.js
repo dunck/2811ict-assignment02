@@ -25,13 +25,14 @@ module.exports = function(){
 
     this.getGroups = function(username, role = 0){
         let groups = [];
-        console.log(role);
+        //console.log(role);
 
         if(role == 2){
             // Just return every group and every channel
             for(let i = 0; i < data.groups.length; i++){
                 let group = data.groups[i];
                 group.channels = this.getChannels(username, group, role);
+                group.role = 2;
                 groups.push(group);
             }
         } else {   

@@ -31,7 +31,7 @@
         <div class="btn-group-vertical" style="width: 100%">
           <ng-container *ngFor="let group of groups">
             <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success">{{ group.name }}</button>
-            <button type="button" *ngIf="group.role == 1" (click)="openGroup(group.name)" class="btn btn-outline-primary">{{ group.name }}</button>
+            <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="btn btn-outline-primary">{{ group.name }}</button>
           </ng-container>
         </div>
       </div>

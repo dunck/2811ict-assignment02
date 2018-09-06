@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         if(data != false){
           let temp = JSON.stringify(data);
           sessionStorage.setItem('user', temp);         
-         this.router.navigate(['/home']); 
+          this.router.navigate(['/home']); 
         } else {
           let message = "Your username and password did not match."
           document.getElementById('error').innerHTML = '<div class="alert alert-dismissible alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Oh snap!</strong> '+ message +'</div>';
