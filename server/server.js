@@ -48,7 +48,7 @@ var data = {
         },{
             'name':'1701ICT',
             'admins':['group'],
-            'members':['member2', 'ryoma']
+            'members':['member2']
         },
     ],
     'channels':[
@@ -69,7 +69,7 @@ app.post('/api/login', function(req, res){
 
     if(match !== false){
         groups.data = data;
-        match.groups = groups.getGroups(username);
+        match.groups = groups.getGroups(username, match.permissions);
     }
     res.send(match);
 });

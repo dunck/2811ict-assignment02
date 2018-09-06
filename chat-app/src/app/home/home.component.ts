@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
 
       console.log(this.groups);
     }
-    }
+  }
 
   logout(){
     console.log('logout()');
