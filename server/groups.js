@@ -23,6 +23,19 @@ module.exports = function(){
         return match;
     }
 
+    this.deleteGroup = function(groupName){
+        let found = false;
+        //console.log(this.data);
+        for(let i = 0; i < this.data.length; i++){
+            if(this.data[i].name == groupName){
+                found = true;
+                this.data.splice(i, 1);
+                return this.data
+            }
+        }
+        return found;
+    }
+
     this.getGroups = function(username, role = 0){
         let groups = [];
         //console.log(role);

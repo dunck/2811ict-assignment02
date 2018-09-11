@@ -36,14 +36,37 @@ export class HomeComponent implements OnInit {
   }
 
   createGroup(event){
-    console.log(event)
     event.preventDefault();
-    console.log(this.newGroupName)
     let data = {'newGroupName': this.newGroupName};
     this._groupService.createGroup(data).subscribe(
       data => { 
         console.log(data);
+        this.getGroups();
       },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+  deleteGroup(groupName){
+    this._groupService.deleteGroup(groupName, this.user.username).subscribe(
+      data=>{
+        this.getGroups();
+      }, error =>{
+        console.error(error)
+      }
+    )
+  }
+  getGroups(){
+    let data = {
+      'username': JSON.parse(sessionStorage.getItem('user')).username
+    }
+    this._groupService.getGroups(data).subscribe(
+      d=>{
+        console.log('getGroups()');
+        console.log(d);
+        this.groups = d['groups'];
+      }, 
       error => {
         console.error(error);
       }

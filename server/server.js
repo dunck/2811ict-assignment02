@@ -50,19 +50,38 @@ app.get('/', function (req, res) {
 app.get('/home', function(req,res){
     res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
 });
- 
 
-// // API routes
-// app.get('/api/users', function(req,res){
-//     res.send(data.users);
-// });
-// app.post('/api/groups', function(req,res){
-//     let username = req.body.username;
-//     res.send(data.groups);
-// });
-// app.get('/api/rooms', function(req,res){
-//     res.send(data.rooms);
-// });
+app.post('/api/groups', function(req,res){
+    // We want to authenticate again -- usually you'd use a token
+    fs.readFile(dataFile, dataFormat, function(err, data){
+        data = JSON.parse(data);
+        let username = req.body.username; 
+        login.data = data;
+        let match = login.findUser(username);
+    
+        if(match !== false){
+            groups.data = data;
+            match.groups = groups.getGroups(username, match.permissions);
+        }
+        res.send(match);
+    });
+});
+
+app.delete('/api/group/delete/:groupname', function(req, res){
+    let groupName = req.params.groupname;
+    fs.readFile(dataFile, dataFormat, function(err, data){
+        let readData = JSON.parse(data);
+        groups.data = readData.groups;
+        readData.groups = groups.deleteGroup(groupName);
+        console.log(readData);
+        let json = JSON.stringify(readData);
+        fs.writeFile(dataFile, json, dataFormat, function(err, d){
+            res.send(true);
+            console.log("Deleted group: " + groupName);
+        });
+    });
+});
+
 app.post('/api/group/create', function(req, res){
     let groupName = req.body.newGroupName
     if(groupName == '' || groupName == 'undefined' || groupName == null){
@@ -70,31 +89,21 @@ app.post('/api/group/create', function(req, res){
     } else {
         fs.readFile(dataFile, dataFormat, function(err, data){
             let readData = JSON.parse(data);
-            let groups = readData.groups;
+            let g = readData.groups;
     
             let newGroup = {
                 'name': req.body.newGroupName,
                 'admins':[],
                 'members':[]
             }
-            groups.push(newGroup)
-            readData.groups = groups;
+            g.push(newGroup)
+            readData.groups = g;
             let json = JSON.stringify(readData);
             // console.log(newGroup);   
             fs.writeFile(dataFile, json, dataFormat, function(err, data){
                 res.send(true);
                 console.log("Created new group: " + req.body.newGroupName);
             });
-    
-            // let obj = {
-            //     'name': req.body.newGroupName,
-            //     'admins':[],
-            //     'members':[]
-            // }
-            // let newGroup = JSON.stringify(obj);
-            // fs.writeFile
-            // console.log(obj);
-            // res.send(true);
         });
     }
 })
