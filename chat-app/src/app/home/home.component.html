@@ -43,9 +43,9 @@
 
             <!-- List of Groups -->
             <div class="row" *ngFor="let group of groups">
-                <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success col-lg-10">{{ group.name }}</button>
+                <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success col-lg-12">{{ group.name }}</button>
                 <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="btn btn-outline-primary col-lg-10">{{ group.name }}</button>
-                <button type="button" class="btn btn-danger col-lg-2" (click)="deleteGroup(group.name)">-</button>
+                <button type="button" class="btn btn-danger col-lg-2" (click)="deleteGroup(group.name)" *ngIf="group.role >= 1">-</button>
             </div>
           </div>
         </div>        
