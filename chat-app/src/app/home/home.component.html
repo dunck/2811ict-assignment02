@@ -23,24 +23,39 @@
 </nav>
 
 <!-- Main Body -->
-<div class="container h-100">
+<div class="container h-100" style="max-width: 1920px; padding: 0px; margin-left: auto; margin-right: auto">
   <div class="row" style="width: 100%">
       <!-- Groups -->
       <div class="col-lg-2" style="padding:0px">
-        <h3 style="text-align:center; width:100%">Groups</h3>
-        <div class="btn-group-vertical" style="width: 100%">
-          <ng-container *ngFor="let group of groups">
-            <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success">{{ group.name }}</button>
-            <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="btn btn-outline-primary">{{ group.name }}</button>
-          </ng-container>
-        </div>
+
+        <!-- Groups Section -->
+        <div class="card mb-3">
+          <h3 class="card-header">Groups</h3>
+          <div class="card-body" style="height: 500px; overflow-y:hidden">
+
+            <!-- New Group Form -->
+            <div class="form-inline" >
+              <form (submit)="createGroup($event)">
+                <input class="form-control" name="newGroupName" style="width:calc(100% - 100px)" placeholder="New Group" type="text" [(ngModel)]="newGroupName">
+                <button class="btn btn-primary" style="width:100px">Create</button>
+              </form>
+            </div>
+
+            <!-- List of Groups -->
+            <div class="btn-group-vertical" style="width: 100%">
+              <ng-container *ngFor="let group of groups">
+                <button type="button" *ngIf="group.role == 0" (click)="openGroup(group.name)" class="btn btn-outline-success">{{ group.name }}</button>
+                <button type="button" *ngIf="group.role >= 1" (click)="openGroup(group.name)" class="btn btn-outline-primary">{{ group.name }}</button>
+              </ng-container>
+            </div>
+          </div>
+        </div>        
       </div>
       <div class="col-lg-2" style="padding:0px">
         <h3 style="text-align:center; width:100%">Channels</h3>
         <app-channels [channels]=channels [group]=selectedGroup (channelChanged)="channelChangedHandler($event)"></app-channels>
       </div>
       <div class="col-lg-6" style="padding:0px">
-        <h3 style="text-align:center; width:100%">Chat</h3>
         <app-chat [channel]=selectedChannel></app-chat>
       </div>
       <div class="col-lg-2" style="padding:0px">

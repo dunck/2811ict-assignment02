@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
+import { GroupService } from '../group.service';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,9 @@ export class HomeComponent implements OnInit {
   public selectedChannel;
   public groups = [];
   public channels = [];
+  public newGroupName:String
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private _groupService:GroupService) { }
 
   ngOnInit() {
     if(sessionStorage.getItem('user') === null){
@@ -31,6 +33,21 @@ export class HomeComponent implements OnInit {
         }
       }
     }
+  }
+
+  createGroup(event){
+    console.log(event)
+    event.preventDefault();
+    console.log(this.newGroupName)
+    let data = {'newGroupName': this.newGroupName};
+    this._groupService.createGroup(data).subscribe(
+      data => { 
+        console.log(data);
+      },
+      error => {
+        console.error(error);
+      }
+    )
   }
 
   logout(){

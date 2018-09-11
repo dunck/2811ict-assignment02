@@ -52,17 +52,52 @@ app.get('/home', function(req,res){
 });
  
 
-// API routes
-app.get('/api/users', function(req,res){
-    res.send(data.users);
-});
-app.post('/api/groups', function(req,res){
-    let username = req.body.username;
-    res.send(data.groups);
-});
-app.get('/api/rooms', function(req,res){
-    res.send(data.rooms);
-});
+// // API routes
+// app.get('/api/users', function(req,res){
+//     res.send(data.users);
+// });
+// app.post('/api/groups', function(req,res){
+//     let username = req.body.username;
+//     res.send(data.groups);
+// });
+// app.get('/api/rooms', function(req,res){
+//     res.send(data.rooms);
+// });
+app.post('/api/group/create', function(req, res){
+    let groupName = req.body.newGroupName
+    if(groupName == '' || groupName == 'undefined' || groupName == null){
+        res.send(false);
+    } else {
+        fs.readFile(dataFile, dataFormat, function(err, data){
+            let readData = JSON.parse(data);
+            let groups = readData.groups;
+    
+            let newGroup = {
+                'name': req.body.newGroupName,
+                'admins':[],
+                'members':[]
+            }
+            groups.push(newGroup)
+            readData.groups = groups;
+            let json = JSON.stringify(readData);
+            // console.log(newGroup);   
+            fs.writeFile(dataFile, json, dataFormat, function(err, data){
+                res.send(true);
+                console.log("Created new group: " + req.body.newGroupName);
+            });
+    
+            // let obj = {
+            //     'name': req.body.newGroupName,
+            //     'admins':[],
+            //     'members':[]
+            // }
+            // let newGroup = JSON.stringify(obj);
+            // fs.writeFile
+            // console.log(obj);
+            // res.send(true);
+        });
+    }
+})
  
 
 
