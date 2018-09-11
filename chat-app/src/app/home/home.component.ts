@@ -48,6 +48,7 @@ export class HomeComponent implements OnInit {
       }
     )
   }
+
   deleteGroup(groupName){
     this._groupService.deleteGroup(groupName, this.user.username).subscribe(
       data=>{
@@ -57,6 +58,7 @@ export class HomeComponent implements OnInit {
       }
     )
   }
+
   getGroups(){
     let data = {
       'username': JSON.parse(sessionStorage.getItem('user')).username
@@ -78,6 +80,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  // Determine which group is currently selected and pass onto the child panel
   openGroup(name){
     console.log(name);
     for(let i = 0; i < this.groups.length; i++){
@@ -88,6 +91,8 @@ export class HomeComponent implements OnInit {
     this.channels = this.selectedGroup.channels;
   }
 
+
+  // Responsible for handling the event call by the child component
   channelChangedHandler(name){
     let found:boolean = false;
     for(let i = 0; i < this.channels.length; i++){

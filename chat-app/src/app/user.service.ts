@@ -1,3 +1,8 @@
+// ============================================
+// This service is responsible for CRUD actions 
+// to the user APIs
+// ============================================
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable, of} from 'rxjs';
@@ -17,5 +22,14 @@ export class UserService {
   login(data){
     let body = JSON.stringify(data);
     return this.http.post(this.api + 'login', body, httpOptions);
+  }
+
+  create(data){
+    let body = JSON.stringify(data);
+    return this.http.post(this.api + 'user/create', body, httpOptions);
+  }
+
+  delete(username){
+    return this.http.delete(this.api + 'user/delete/'+username);
   }
 }

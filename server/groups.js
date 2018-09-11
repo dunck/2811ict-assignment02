@@ -7,22 +7,7 @@ module.exports = function(){
     this.username;
     this.data;
     
-
-    this.findUser = function(username){
-        let match = false;
-        let users = data.users;
-        for(let i = 0; i < users.length; i++){
-            if(users[i].username == username){
-                match = users[i];
-            }
-        }
-        // Grab some groups
-        if(match !== false){
-            match.groups = this.getGroups(username, match.permissions);
-        }
-        return match;
-    }
-
+    // Find and delete a group by matching groupName to available data in this.data
     this.deleteGroup = function(groupName){
         let found = false;
         //console.log(this.data);
@@ -36,6 +21,7 @@ module.exports = function(){
         return found;
     }
 
+    // Return all groups where the username exists (or according to role)
     this.getGroups = function(username, role = 0){
         let groups = [];
         //console.log(role);
@@ -80,6 +66,7 @@ module.exports = function(){
         return groups;
     }
 
+    // Get all the channels a user has access for a given group and role
     this.getChannels = function(username, group, role){
         channels = [];
         // Go through all the channels
