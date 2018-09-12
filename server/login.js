@@ -17,7 +17,7 @@ module.exports = function(){
         return match;
     }
 
-    this.setUserData(data){
+    this.setUserData = function(data){
         this.data = data;
     }
 

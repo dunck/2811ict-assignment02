@@ -8,6 +8,8 @@ const dataFormat = 'utf8';
 
 
 // CORS
+// We are enabling CORS so that our 'ng serve' Angular server can still access
+// our Node server. 
 const cors = require('cors')
 var corsOptions = {
   origin: 'http://localhost:4200',
@@ -21,7 +23,16 @@ app.use(cors(corsOptions))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//var data = 
+// Basic Routes
+app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
+});
+app.get('/home', function(req,res){
+    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
+});
+
+
 // Login Module
 const login = require('./login.js')();
 const groups = require('./groups.js')();
@@ -33,24 +44,18 @@ app.post('/api/login', function(req, res){
         login.data = data;
         let match = login.findUser(username);
     
+        // Check to see if we have a match, get groups if true
         if(match !== false){
             groups.data = data;
             match.groups = groups.getGroups(username, match.permissions);
         }
+        console.log(match.groups[0].channels[0])
         res.send(match);
     });
 });
 
 
-// the "index" route, which serves the Angular app
-app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
-});
-app.get('/home', function(req,res){
-    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
-});
-
+// Group APIs
 app.post('/api/groups', function(req,res){
     // We want to authenticate again -- usually you'd use a token
     fs.readFile(dataFile, dataFormat, function(err, data){
@@ -58,7 +63,8 @@ app.post('/api/groups', function(req,res){
         let username = req.body.username; 
         login.data = data;
         let match = login.findUser(username);
-    
+        
+        // Check to see if we got a match, get groups if true
         if(match !== false){
             groups.data = data;
             match.groups = groups.getGroups(username, match.permissions);
@@ -69,12 +75,16 @@ app.post('/api/groups', function(req,res){
 
 app.delete('/api/group/delete/:groupname', function(req, res){
     let groupName = req.params.groupname;
+
+    // Read the JSON file to get the current data
     fs.readFile(dataFile, dataFormat, function(err, data){
         let readData = JSON.parse(data);
         groups.data = readData.groups;
         readData.groups = groups.deleteGroup(groupName);
         console.log(readData);
         let json = JSON.stringify(readData);
+
+        // Write the updated data to JSON
         fs.writeFile(dataFile, json, dataFormat, function(err, d){
             res.send(true);
             console.log("Deleted group: " + groupName);
@@ -87,6 +97,7 @@ app.post('/api/group/create', function(req, res){
     if(groupName == '' || groupName == 'undefined' || groupName == null){
         res.send(false);
     } else {
+        // Read the JSON file to get an updated list of groups
         fs.readFile(dataFile, dataFormat, function(err, data){
             let readData = JSON.parse(data);
             let g = readData.groups;
@@ -99,7 +110,8 @@ app.post('/api/group/create', function(req, res){
             g.push(newGroup)
             readData.groups = g;
             let json = JSON.stringify(readData);
-            // console.log(newGroup);   
+            
+            // Write the updated data to the JSON file.
             fs.writeFile(dataFile, json, dataFormat, function(err, data){
                 res.send(true);
                 console.log("Created new group: " + req.body.newGroupName);

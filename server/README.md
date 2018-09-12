@@ -28,11 +28,48 @@ If a user is a super admin (2), then all groups are returned with all channels. 
 
 
 # Routes
+The main **get** routes for this are the root directory and **/home**. Both point to the **dist/index.html** in the Angular app folder. To do so, an express static route is also established. 
+**host/**: serves ../angular-app/dist/angular-app/index.html
+**host/home**: serves ../angular-app/dist/angular-app/index.html
 
 ## API
+The node server has a number of APIs available for the Angular app to use. 
 
 ### Login
-
-### User 
+**[POST] host/api/login**: This API is used for logging into the system. As per assignment specification, the login feature only requires the username and does not check for a password. It will call the findUser() function from the login module and then get all the groups using the group module. This route will return the following data structure:
+{
+    "username": "userName",
+    "permissions": 1,
+    "groups": [
+        {
+            "name": "groupName",
+            "admins": ['userName1',..., 'userNameN'],
+            "members":['userName1', ..., 'userNameN'],
+            "channels":[
+                {
+                    "name": "channelName",
+                    "group": "groupName",
+                    "members":["userName1", ... , "userNameN"]
+                }
+            ],
+            "role": 2
+        }
+    ]
+}
+The strategy here is to return a user object with the user details. This user object will contain the groups that the user is associated with as an array of objects. Inside each group object, the channels that the user is associated with is also included. This allows for all the data to be passed to the Angular application at login. 
 
 ### Group
+The group APIs handle the read, create and delete for groups in the JSON file. 
+
+**[POST] host/api/groups**: This API will return all the groups associated with the username that is sent in the post body. This was done as a post for authentication purposes. The post body must have a **username** key value pair. This will be searched against the list of known usernames and then retrieve the groups according to the user's access. If the authentication fails (i.e. the user does not exist), then the API will return a **false**. Once the new group is created in the array, this is then written to the JSON file. 
+
+**[POST] host/api/group/create**: This API will return a true if the server is able to successfully create a new group. This function also uses the post method and requires **newGroupName** to be in the request body. It is recommended to update this code so that it also checks for username to make sure that the user has permission to create new groups. Once the new group object is instantiated and added to the current array of groups, the data is written to the JSON file. This method returns **true** or **false** depending on the success of the request. 
+
+**[DELETE] host/api/group/delete/:groupname**: This API will delete a group from the current list of groups. Currently only returns **true** if it was successful.
+This function should be updated to return **false** if it was unable to delete the group.
+
+### User 
+User routes have not been created for this demonstration. Students should create their own in a similar vein to the Group routes.
+
+## Channels
+Channel routes have not been cretead for this demonstration. Students should create their own in a similar vein to the Group routes. 
