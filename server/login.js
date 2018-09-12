@@ -17,5 +17,9 @@ module.exports = function(){
         return match;
     }
 
+    this.setUserData(data){
+        this.data = data;
+    }
+
     return this;
 }
