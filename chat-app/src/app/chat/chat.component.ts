@@ -39,5 +39,8 @@ export class ChatComponent implements OnInit {
       "group": group,
       "channel": channel
     });
+
+    // Clear message after it has been sent.
+    this.message = "";
   }
 }
