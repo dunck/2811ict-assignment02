@@ -1,3 +1,7 @@
+// server.js
+// Run with `node server.js`.
+// Powers login, groups, and channels administrations.
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
