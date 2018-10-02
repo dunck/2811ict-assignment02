@@ -164,9 +164,7 @@ app.post('/api/channels', async (req, res) => {
     res.send(ret);
 });
 
+// HTTP Listener on port 3000
+app.listen(3000, () => console.log('Server listening...'));
 
-// HTTP Listener
-app.listen(3000, function(){
-    console.log('Server runing');
-})
 module.exports = app;
