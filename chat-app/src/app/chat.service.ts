@@ -1,31 +1,34 @@
+// chat.service.ts
+// ChatService
+// Exposes functions for piping messages to/from the server.
+
 import { Injectable } from '@angular/core';
 import { WebsocketService } from './websocket.service';
-import { Observable, Subject } from 'rxjs-compat/Rx';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs-compat/Rx';`z`
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  
+
   messages: Subject<any>;
-  
-  // Our constructor calls our wsService connect method
-  constructor(private wsService: WebsocketService) {
+
+  constructor(private wsService: WebsocketService, private http: HttpClient) {
     this.messages = <Subject<any>>wsService
       .connect()
       .map((response: any): any => {
         return response;
       })
-   }
-  
-  // Our simplified interface for sending
-  // messages back to our socket.io server
+  }
+
+  // Sends 'msg' to the socket.
   sendMsg(msg) {
     this.messages.next(msg);
   }
-  
-  disconnect() {
-    this.messages.disconnect();
-  }
 
+  // Gets the chat history from the Express server.
+  getHistory() {
+    return this.http.get('http://localhost:3000/api/chat');
+  }
 }
