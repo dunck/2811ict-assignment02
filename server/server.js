@@ -14,6 +14,8 @@ const groups = require('./groups.js')();
 const channels = require('./channels.js')();
 const formidable = require('formidable');
 
+// MongoDB
+
 var url = "mongodb://localhost:27017/";
 
 // CORS
@@ -25,8 +27,6 @@ var corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
 }
 app.use(cors(corsOptions))
-
-
 
 // Body-Parser
 app.use(bodyParser.json());
@@ -41,7 +41,6 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
 });
-
 
 app.post('/api/login', async (req, res) => {
     console.log(`Processing login for '${req.body.username}'.`);
@@ -85,6 +84,7 @@ app.delete('/api/group/delete/:groupname', async (req, res) => {
     console.log(`Group deleted: ${res}.`);
     res.send(ret);
 });
+
 app.delete('/api/channel/delete/:channelname', async (req, res) => {
     // Params
     let channelname = req.params.channelname;
@@ -119,6 +119,7 @@ app.post('/api/channel/create', async (req, res) => {
     }
     res.send(ret);
 });
+
 app.post('/api/images/upload', (req, res) => {
     // console.log(req.body);
     var form = new formidable.IncomingForm({ uploadDir: './images' });
@@ -203,6 +204,7 @@ io.on('connection', async socket => {
 
 // Initialize our websocket server on port 5000
 http.listen(5000, () => console.log('Websockets listening...'));
+
 // HTTP Listener on port 3000
 app.listen(3000, () => console.log('Server listening...'));
 
