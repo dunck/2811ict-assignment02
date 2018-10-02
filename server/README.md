@@ -6,8 +6,18 @@ The server files are largely spread out between these main files:
 * channels.js
 
 ## server.js
-**server.js** is the main file that will run the server. It also instantiates the other files as modules. 
+`server.js` manages the Express & SocketIO server, as well as handling all routes.
 
+### Express
+The Express server (with CORS) is hosted on `http://localhost:3000`.
+
+### Socket-IO
+Sockets are received on `http://localhost:5000`, with the following events implemented:
+ * user connect
+ * user disconnect
+ * user broadcasts message
+
+### Routes
 This module exposes the following routes:
 |Route|Description|
 |-|-|

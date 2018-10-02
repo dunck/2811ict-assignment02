@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
     event.preventDefault();
     console.log(`Creating group: ${this.newGroupName}.`);
     this._groupService.createGroup(this.newGroupName).subscribe(
-      data => {
+      () => {
         console.log(`Group created.`);
         this.getGroups();
       },
@@ -86,8 +86,8 @@ export class HomeComponent implements OnInit {
 
   deleteGroup(groupName) {
     console.log(`Deleting group: '${groupName}'.`)
-    this._groupService.deleteGroup(groupName, this.user.username).subscribe(
-      data => {
+    this._groupService.deleteGroup(groupName).subscribe(
+      () => {
         console.log(`Group deleted.`)
         this.getGroups();
       }, error => {
@@ -98,7 +98,7 @@ export class HomeComponent implements OnInit {
   deleteChannel(channelName) {
     console.log(`Deleting channel: '${channelName}'.`)
     this._groupService.deleteChannel(channelName).subscribe(
-      data => {
+      () => {
         console.log(`Channel deleted.`)
         this.refreshChannels();
       }, error => {
