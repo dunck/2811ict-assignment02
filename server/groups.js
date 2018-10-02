@@ -1,9 +1,6 @@
-// ============================================
-// This module is responsible for joining the user's 
-// groups and channels according to the user's 
-// responsibilities
-// ============================================
-
+// group.js
+// Dependency of `server.js`.
+// Handles group creation, deletion and get requests.
 
 module.exports = () => {
     this.username;
@@ -13,7 +10,8 @@ module.exports = () => {
     this.channels = require('./channels.js')();
     this.login = require('./login.js')();
 
-    // Find and delete a group by matching groupName to available data in this.data
+    // Returns a truthy true if successfully deleted a group.
+    // Takes a groupname.
     this.deleteGroup = async (groupName) => {
         let db = await this.mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -22,7 +20,9 @@ module.exports = () => {
         return res;
     }
 
-    // Find and delete a group by matching groupName to available data in this.data
+    // Returns a truthy true if successfully crated a group.
+    // The default admin of the group is 'super'.
+    // Takes a groupname.
     this.createGroup = async (groupName) => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -46,8 +46,9 @@ module.exports = () => {
         await db.close();
         return res;
     }
-
-    // Return all groups where the username exists (or according to role)
+    
+    // Returns a list of groups corresponding to a user.
+    // Takes a username.
     this.getGroups = async username => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -62,15 +63,6 @@ module.exports = () => {
 
         let groups = await dbo.collection("groups").find(searchbase).toArray();
         await db.close();
-
-        // Grab the channels for each group
-        // console.log('Channels:');
-        // for (let i = 0; i < groups.length; i++) {
-        //     let channels = await this.channels.getChannels(username, groups[i], role);
-        //     // console.log(channels);
-        //     groups[i].channels = channels;
-        // }
-        // console.log('End channels.');
 
         return groups;
     }
