@@ -22,5 +22,23 @@ Commits were assembled on the basis of whole/complete changes potentially spanni
 ## /chat-app
 `/chat-app` contains the angular directory, with `/chat-app/src/app/` containing author-written files.
 
+See `/chat-app/README.md` for more details.
+
 ## /server
 `/server` contains the Express server and various other, smaller NodeJS modules which support the server. All routes are managed from `/server/server.js`.
+
+See `/server/README.md` for more details.
+
+# Database
+The NoSQL-variant MongoDB v4.0.2 was used to store users, groups, channels and chat-history. No users were implemented for database security as it was not required. 
+
+|Database|Collection|Document template|
+|-|-|-|
+|`chat-app`|`users`|`{ username: "", password: "", permissions: 0 }`|
+|`chat-app`|`groups`|`{ name: "", admins: [""], members: [""] }`|
+|`chat-app`|`channels`|`{ name: "", group: "", members: [""] }`|
+|`chat-app`|`chat`|`{ message: "", username: "", group: "", channel: "" }`|
+
+The database is accessed in different ways on two cases:
+ * When a user joins a channel, the collection is probed for a list of messages.
+ * When a user writes to a channel, the collection inserts a new document matching the context.
