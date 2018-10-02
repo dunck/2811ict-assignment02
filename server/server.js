@@ -89,8 +89,15 @@ app.delete('/api/channel/delete/:channelname', async (req, res) => {
     res.send(ret);
 });
 
-app.delete('/api/group/delete/:groupname', function(req, res){
+app.post('/api/group/create/:groupname', async (req, res) => {
     let groupName = req.params.groupname;
+    console.log(`Received request to create group '${groupName}'.`);
+    let ret = false;
+    if (groupName != '' && groupName != 'undefined' && groupName != null) {
+        ret = await groups.createGroup(groupName);
+    }
+    res.send(ret);
+});
 
 app.post('/api/channel/create', async (req, res) => {
     let groupName = req.body.groupName;
