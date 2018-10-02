@@ -60,21 +60,31 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Group APIs
-app.post('/api/groups', function(req,res){
-    // We want to authenticate again -- usually you'd use a token
-    fs.readFile(dataFile, dataFormat, function(err, data){
-        data = JSON.parse(data);
-        let username = req.body.username; 
-        login.data = data;
-        let match = login.findUser(username);
-        
-        // Check to see if we got a match, get groups if true
-        if(match !== false){
-            groups.data = data;
-            match.groups = groups.getGroups(username, match.permissions);
-        }
-        res.send(match);
-    });
+app.post('/api/groups', async (req, res) => {
+    // Params
+    let username = req.body.username;
+
+    // Processing
+    console.log(`Received request for groups under '${username}'.`)
+    let match = {};
+    match.groups = await groups.getGroups(username);
+    console.log(`Returning ${match.groups.length} groups.`)
+    res.send(match);
+});
+
+app.delete('/api/group/delete/:groupname', async (req, res) => {
+    // Params
+    let groupName = req.params.groupname;
+
+    // Processing
+    console.log(`Received request to delete group '${groupName}'.`);
+    let ret = false;
+    if (groupName != '' && groupName != 'undefined' && groupName != null) {
+        ret = await groups.deleteGroup(groupName);
+    }
+    console.log(`Group deleted: ${res}.`);
+    res.send(ret);
+});
 app.delete('/api/channel/delete/:channelname', async (req, res) => {
     // Params
     let channelname = req.params.channelname;
