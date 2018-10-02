@@ -113,8 +113,11 @@ app.post('/api/group/create/:groupname', async (req, res) => {
 });
 
 app.post('/api/channel/create', async (req, res) => {
+    // Params
     let groupName = req.body.groupName;
     let channelName = req.body.channelName;
+
+    // Processing
     console.log(`Received request to create channel '${channelName}' under '${groupName}'.`);
     let ret = false;
     if (channelName != '' && channelName != undefined && groupName != '' && groupName != undefined) {
