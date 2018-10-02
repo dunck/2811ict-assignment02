@@ -3,22 +3,34 @@
 // the data that is presented.
 // ============================================
 
-module.exports = function(){
-    this.data;
 
-    this.findUser = function(username){
-        let match = false;
-        let users = data.users;
-        for(let i = 0; i < users.length; i++){
-            if(users[i].username == username){
-                match = users[i];
-            }
-        }
-        return match;
+
+module.exports = function () {
+    this.mongo = require("mongodb").MongoClient;
+    this.url = "mongodb://localhost:27017/";
+
+    this.findUser = async username => {
+        let db = await mongo.connect(this.url, { useNewUrlParser: true });
+        let dbo = await db.db("chat-app");
+        let match = await dbo.collection("users").find({ "username": username }).toArray();
+        await db.close();
+
+        if (match.length > 1)
+            throw err;
+
+        if (match[0] === undefined)
+            return false;
+
+        return match[0];
     }
 
-    this.setUserData = function(data){
-        this.data = data;
+    this.getUserRole = async username => {
+        let db = await mongo.connect(this.url, { useNewUrlParser: true });
+        let dbo = await db.db("chat-app");
+        let res = await dbo.collection("users").find({ "username": username }).toArray();
+        let role = res[0].permissions;
+        await db.close();
+        return role;
     }
 
     return this;

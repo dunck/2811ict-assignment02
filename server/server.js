@@ -14,6 +14,7 @@ const groups = require('./groups.js')();
 const channels = require('./channels.js')();
 const formidable = require('formidable');
 
+var url = "mongodb://localhost:27017/";
 
 // CORS
 // We are enabling CORS so that our 'ng serve' Angular server can still access
@@ -41,27 +42,21 @@ app.get('/home', function(req,res){
 });
 
 
-// Login Module
-const login = require('./login.js')();
-const groups = require('./groups.js')();
+app.post('/api/login', async (req, res) => {
+    console.log(`Processing login for '${req.body.username}'.`);
+    let match = await findUser(req.body.username);
 
-app.post('/api/login', function(req, res){
-    fs.readFile(dataFile, dataFormat, function(err, data){
-        data = JSON.parse(data);
-        let username = req.body.username; 
-        login.data = data;
-        let match = login.findUser(username);
-    
-        // Check to see if we have a match, get groups if true
-        if(match !== false){
-            groups.data = data;
-            match.groups = groups.getGroups(username, match.permissions);
-        }
-        console.log(match.groups[0].channels[0])
-        res.send(match);
-    });
+    // Check to see if we have a match, get groups if true
+    if (match === false) {
+        console.log(`Login failed.`);
+    } else {
+        console.log(`Login suceeded.`);
+        match.groups = await groups.getGroups(match.username, match.permissions);
+        // console.log(match.groups[0].channels[0]);
+    }
+
+    res.send(match);
 });
-
 
 // Group APIs
 app.post('/api/groups', function(req,res){
