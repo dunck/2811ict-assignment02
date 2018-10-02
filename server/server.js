@@ -6,7 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
-const mongodb = require('mongodb');
+const mongo = require('mongodb');
 const fs = require('fs');
 const dataFile = './data.json';
 const dataFormat = 'utf8';
@@ -34,14 +34,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Basic Routes
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
-
-// Used for getting the basic router page.
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
-});
-app.get('/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
-});
 
 // Used for storing profile images.
 app.use('/images', express.static(path.join(__dirname, './images')));
@@ -162,7 +154,7 @@ app.post('/api/images/upload', (req, res) => {
 
     form.on('field', (name, field) => {
         console.log("File upload initiated1.");
-        file.path = form.uploadDir + "/" + "super" + ".png";
+        file.path = form.uploadDir + "/super.png";
     });
 
     form.on('file', (field, file) => {
@@ -193,12 +185,26 @@ app.post('/api/channels', async (req, res) => {
     res.send(ret);
 });
 
+// Used for retrieving chat history.
+app.get('/api/chat', async (req, res) => {
+    let db = await mongo.connect("mongodb://localhost:27017/", { useNewUrlParser: true });
+    let dbo = await db.db("chat-app");
+    
+    // Processing
+    console.log(`Received request to get chat history.`);
+    let ret = await dbo.collection("chat").find().toArray();
+    console.log(res);
+    await db.close();
+
+    res.send(ret);
+});
+
 // Sockets setup.
 io.on('connection', async socket => {
-    // let mongo = require("mongodb").MongoClient;
-    // let url = "mongodb://localhost:27017/";
-    // let db = await mongo.connect(url, { useNewUrlParser: true });
-    // let dbo = await db.db("chat-app");
+    let mongo = require("mongodb").MongoClient;
+    let url = "mongodb://localhost:27017/";
+    let db = await mongo.connect(url, { useNewUrlParser: true });
+    let dbo = await db.db("chat-app");
 
     // Log whenever a user connects
     console.log('User connected.');
@@ -208,11 +214,12 @@ io.on('connection', async socket => {
         console.log('User disconnected.');
     });
 
+    // Log whenever a message is received, and write it to the chat collection
     socket.on('message', message => {
         console.log("Message received: " + message);
         let pmsg = JSON.parse(message);
-        // console.log("Inserting message into db.");
-        // dbo.collection("chat").insertOne(message)
+        console.log("Inserting message into db.");
+        dbo.collection("chat").insertOne(pmsg)
         io.emit('message', { type: 'new-message', data: { "username": pmsg.username, "message": pmsg.message } });
     });
 });
