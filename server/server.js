@@ -164,6 +164,35 @@ app.post('/api/channels', async (req, res) => {
     res.send(ret);
 });
 
+// Sockets
+let http = require('http').Server(app);
+let io = require('socket.io')(http);
+
+io.on('connection', async socket => {
+    // let mongo = require("mongodb").MongoClient;
+    // let url = "mongodb://localhost:27017/";
+    // let db = await mongo.connect(url, { useNewUrlParser: true });
+    // let dbo = await db.db("chat-app");
+
+    // Log whenever a user connects
+    console.log('User connected.');
+
+    // Log whenever a client disconnects from our websocket server
+    socket.on('disconnect', () => {
+        console.log('User disconnected.');
+    });
+
+    socket.on('message', message => {
+        console.log("Message received: " + message);
+        let pmsg = JSON.parse(message);
+        // console.log("Inserting message into db.");
+        // dbo.collection("chat").insertOne(message)
+        io.emit('message', { type: 'new-message', data: { "username": pmsg.username, "message": pmsg.message } });
+    });
+});
+
+// Initialize our websocket server on port 5000
+http.listen(5000, () => console.log('Websockets listening...'));
 // HTTP Listener on port 3000
 app.listen(3000, () => console.log('Server listening...'));
 
