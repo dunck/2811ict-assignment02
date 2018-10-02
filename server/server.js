@@ -74,11 +74,33 @@ app.post('/api/groups', function(req,res){
         }
         res.send(match);
     });
+app.delete('/api/channel/delete/:channelname', async (req, res) => {
+    // Params
+    let channelname = req.params.channelname;
+
+    // Processing
+    console.log(`Received request to delete channel '${channelname}'.`);
+    let ret = false;
+    if (channelname != '' && channelname != 'undefined' && channelname != null) {
+        ret = await channels.deleteChannel(channelname);
+    }
+    console.log(`Channel deleted: ${res}.`);
+    res.send(ret);
 });
 
 app.delete('/api/group/delete/:groupname', function(req, res){
     let groupName = req.params.groupname;
 
+app.post('/api/channel/create', async (req, res) => {
+    let groupName = req.body.groupName;
+    let channelName = req.body.channelName;
+    console.log(`Received request to create channel '${channelName}' under '${groupName}'.`);
+    let ret = false;
+    if (channelName != '' && channelName != undefined && groupName != '' && groupName != undefined) {
+        ret = await channels.createChannel(groupName, channelName);
+    }
+    res.send(ret);
+});
     // Read the JSON file to get the current data
     fs.readFile(dataFile, dataFormat, function(err, data){
         let readData = JSON.parse(data);
@@ -123,6 +145,18 @@ app.post('/api/group/create', function(req, res){
     }
 })
  
+app.post('/api/channels', async (req, res) => {
+    // Params
+    let groupName = req.body.group;
+    let username = req.body.username;
+    let role = req.body.role;
+
+    // Processing.
+    console.log(`Received request to get channels under '${groupName}' for '${username}' with role ${role}.`);
+    ret = await channels.getChannels(username, groupName, role);
+
+    res.send(ret);
+});
 
 
 // HTTP Listener
