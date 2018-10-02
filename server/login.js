@@ -1,14 +1,13 @@
-// ============================================
-// This module handles the login according to
-// the data that is presented.
-// ============================================
-
-
+// login.js
+// Dependency of `server.js`.
+// Handles logins and user role requests.
 
 module.exports = function () {
     this.mongo = require("mongodb").MongoClient;
     this.url = "mongodb://localhost:27017/";
 
+    // Returns a truthy true if username/password combination is valid.
+    // Takes a username and a password.
     this.findUser = async (username, password) => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -27,6 +26,8 @@ module.exports = function () {
         return match[0];
     }
 
+    // Returns a user role (i.e. 0, 1, or 2).
+    // Takes a username.
     this.getUserRole = async username => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
