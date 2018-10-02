@@ -1,12 +1,14 @@
-// ============================================
-// This module is responsible for joining the user's 
-// groups and channels according to the user's 
-// responsibilities
-// ============================================
+// channels.js
+// Dependency of `groups.js`.
+// Handles channels creation, deletion and get requests.
+
 module.exports = () => {
     this.mongo = require("mongodb").MongoClient;
     this.url = "mongodb://localhost:27017/";
 
+    // Creates a channel, and returns a truthy value corresponding to success.
+    // The channel contains no members by default.
+    // Takes a group name and a channel name.
     this.createChannel = async (groupName, channelName) => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -24,6 +26,8 @@ module.exports = () => {
         return res;
     }
 
+    // Deletes a channel, and returns a truthy value corresponding to success.
+    // Takes a group name and a channel name.
     this.deleteChannel = async (channelName) => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
@@ -32,11 +36,9 @@ module.exports = () => {
         return res;
     }
 
-    // Get all the channels a user has access for a given group and role
+    // Retrieves a channel list corresponding to a username, group and role.
+    // Takes a username, group name and a role.
     this.getChannels = async (username, group, role) => {
-        // console.log(username);
-        // console.log(group);
-        // console.log(role);
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
 
@@ -46,11 +48,8 @@ module.exports = () => {
         let searchbase = { "group": group };
         if (role == 0)
             searchbase += { "members": username };
-        console.log(`Searchbase:`);
         
-        // console.log(searchbase);
         let channels = await dbo.collection("channels").find(searchbase).toArray();
-        // console.log(channels);
         await db.close();
         return channels;
     }
