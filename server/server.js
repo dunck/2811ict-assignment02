@@ -100,7 +100,10 @@ app.delete('/api/channel/delete/:channelname', async (req, res) => {
 });
 
 app.post('/api/group/create/:groupname', async (req, res) => {
+    // Params
     let groupName = req.params.groupname;
+
+    // Processing
     console.log(`Received request to create group '${groupName}'.`);
     let ret = false;
     if (groupName != '' && groupName != 'undefined' && groupName != null) {
