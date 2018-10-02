@@ -1,10 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const app = express(); 
+const app = express();
+const mongodb = require('mongodb');
 const fs = require('fs');
 const dataFile = './data.json';
 const dataFormat = 'utf8';
+const usercol = 'users';
+const groupcol = 'groups';
+const channelcol = 'channels';
+const login = require('./login.js')();
+const groups = require('./groups.js')();
+const channels = require('./channels.js')();
+const formidable = require('formidable');
 
 
 // CORS
