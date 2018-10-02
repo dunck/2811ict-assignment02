@@ -34,11 +34,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Basic Routes
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
-app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
+app.use('/images', express.static(path.join(__dirname, './images')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
 });
-app.get('/home', function(req,res){
-    res.sendFile(path.join(__dirname,'../angular-app/dist/angular-app/index.html'))
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
 });
 
 
