@@ -119,18 +119,6 @@ app.post('/api/channel/create', async (req, res) => {
     }
     res.send(ret);
 });
-    // Read the JSON file to get the current data
-    fs.readFile(dataFile, dataFormat, function(err, data){
-        let readData = JSON.parse(data);
-        groups.data = readData.groups;
-        readData.groups = groups.deleteGroup(groupName);
-        console.log(readData);
-        let json = JSON.stringify(readData);
-
-        // Write the updated data to JSON
-        fs.writeFile(dataFile, json, dataFormat, function(err, d){
-            res.send(true);
-            console.log("Deleted group: " + groupName);
         });
     });
 });
