@@ -13,15 +13,11 @@ const login = require('./login.js')();
 const groups = require('./groups.js')();
 const channels = require('./channels.js')();
 const formidable = require('formidable');
-
-// MongoDB
-
-var url = "mongodb://localhost:27017/";
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const cors = require('cors')
 
 // CORS
-// We are enabling CORS so that our 'ng serve' Angular server can still access
-// our Node server. 
-const cors = require('cors')
 var corsOptions = {
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
@@ -34,7 +30,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Basic Routes
 app.use(express.static(path.join(__dirname, '../angular-app/dist/angular-app')));
-app.use('/images', express.static(path.join(__dirname, './images')));
+
+// Used for getting the basic router page.
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
 });
@@ -42,23 +39,32 @@ app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, '../angular-app/dist/angular-app/index.html'))
 });
 
-app.post('/api/login', async (req, res) => {
-    console.log(`Processing login for '${req.body.username}'.`);
-    let match = await findUser(req.body.username);
+// Used for storing profile images.
+app.use('/images', express.static(path.join(__dirname, './images')));
 
-    // Check to see if we have a match, get groups if true
+// Used for processing login attempts.
+// Takes a username & password in the request body.
+app.post('/api/login', async (req, res) => {
+    // Params
+    let username = req.body.username;
+    let password = req.body.password;
+
+    // Processing
+    console.log(`Processing login for '${username}'.`);
+    // findUser will return false if a bad username/password combination is given.
+    let match = await login.findUser(username, password);
+
     if (match === false) {
         console.log(`Login failed.`);
     } else {
         console.log(`Login suceeded.`);
         match.groups = await groups.getGroups(match.username, match.permissions);
-        // console.log(match.groups[0].channels[0]);
     }
-
     res.send(match);
 });
 
-// Group APIs
+// Used for retrieving groups for a specific user.
+// Takes a username in the request body.
 app.post('/api/groups', async (req, res) => {
     // Params
     let username = req.body.username;
@@ -71,6 +77,8 @@ app.post('/api/groups', async (req, res) => {
     res.send(match);
 });
 
+// Used for deleting groups.
+// Takes the group name in the request parameters.
 app.delete('/api/group/delete/:groupname', async (req, res) => {
     // Params
     let groupName = req.params.groupname;
@@ -85,6 +93,8 @@ app.delete('/api/group/delete/:groupname', async (req, res) => {
     res.send(ret);
 });
 
+// Used for deleting channels.
+// Takes the channel name in the request parameters.
 app.delete('/api/channel/delete/:channelname', async (req, res) => {
     // Params
     let channelname = req.params.channelname;
@@ -99,6 +109,8 @@ app.delete('/api/channel/delete/:channelname', async (req, res) => {
     res.send(ret);
 });
 
+// Used for creating groups.
+// Takes the channel name in the request parameters.
 app.post('/api/group/create/:groupname', async (req, res) => {
     // Params
     let groupName = req.params.groupname;
@@ -112,6 +124,8 @@ app.post('/api/group/create/:groupname', async (req, res) => {
     res.send(ret);
 });
 
+// Used for creating channels.
+// Takes the group name and channel name in the request parameters.
 app.post('/api/channel/create', async (req, res) => {
     // Params
     let groupName = req.body.groupName;
@@ -126,11 +140,11 @@ app.post('/api/channel/create', async (req, res) => {
     res.send(ret);
 });
 
+// Used for uploading profile images.
+// The request is a FormData object.
 app.post('/api/images/upload', (req, res) => {
-    // console.log(req.body);
     var form = new formidable.IncomingForm({ uploadDir: './images' });
     form.keepExtensions = true;
-    let path = "";
 
     form.on('error', err => {
         throw err;
@@ -142,20 +156,12 @@ app.post('/api/images/upload', (req, res) => {
         });
     });
 
-    // console.log(req);
-    form.on('field', function(name, field) {
-        let path = form.uploadDir + "/" + field + ".png"; 
+    form.on('field', (name, field) => {
+        console.log("File upload initiated1.");
+        file.path = form.uploadDir + "/" + "super" + ".png";
     });
-    
-    form.on('fileBegin', (name, file) => {
-        console.log(name);
-        file.path = path;
-        console.log(file.path)
-    });
-    
+
     form.on('file', (field, file) => {
-        console.log(field);
-        console.log(file);
         res.send({
             result: "OK",
             data: { 'filename': file.name, 'size': file.size },
@@ -165,9 +171,11 @@ app.post('/api/images/upload', (req, res) => {
     });
 
     form.parse(req);
-    // res.send(true);
+    res.send(true);
 });
 
+// Used for retrieving channels for a user.
+// Takes the group name, username and user role in the request body
 app.post('/api/channels', async (req, res) => {
     // Params
     let groupName = req.body.group;
@@ -181,10 +189,7 @@ app.post('/api/channels', async (req, res) => {
     res.send(ret);
 });
 
-// Sockets
-let http = require('http').Server(app);
-let io = require('socket.io')(http);
-
+// Sockets setup.
 io.on('connection', async socket => {
     // let mongo = require("mongodb").MongoClient;
     // let url = "mongodb://localhost:27017/";
