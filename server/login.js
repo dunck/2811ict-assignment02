@@ -11,9 +11,9 @@ module.exports = function () {
     this.findUser = async (username, password) => {
         let db = await mongo.connect(this.url, { useNewUrlParser: true });
         let dbo = await db.db("chat-app");
-        let match = await dbo.collection("users").find({ 
+        let match = await dbo.collection("users").find({
             "username": username,
-            "password": password 
+            "password": password
         }).toArray();
         await db.close();
 
