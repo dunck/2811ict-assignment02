@@ -119,38 +119,48 @@ app.post('/api/channel/create', async (req, res) => {
     }
     res.send(ret);
 });
+app.post('/api/images/upload', (req, res) => {
+    // console.log(req.body);
+    var form = new formidable.IncomingForm({ uploadDir: './images' });
+    form.keepExtensions = true;
+    let path = "";
+
+    form.on('error', err => {
+        throw err;
+        res.send({
+            result: "Failed",
+            data: {},
+            numberOfImages: 0,
+            message: "Cannot upload images."
         });
     });
+
+    // console.log(req);
+    form.on('field', function(name, field) {
+        let path = form.uploadDir + "/" + field + ".png"; 
+    });
+    
+    form.on('fileBegin', (name, file) => {
+        console.log(name);
+        file.path = path;
+        console.log(file.path)
+    });
+    
+    form.on('file', (field, file) => {
+        console.log(field);
+        console.log(file);
+        res.send({
+            result: "OK",
+            data: { 'filename': file.name, 'size': file.size },
+            numberOfImages: 1,
+            message: "Upload successful."
+        });
+    });
+
+    form.parse(req);
+    // res.send(true);
 });
 
-app.post('/api/group/create', function(req, res){
-    let groupName = req.body.newGroupName
-    if(groupName == '' || groupName == 'undefined' || groupName == null){
-        res.send(false);
-    } else {
-        // Read the JSON file to get an updated list of groups
-        fs.readFile(dataFile, dataFormat, function(err, data){
-            let readData = JSON.parse(data);
-            let g = readData.groups;
-    
-            let newGroup = {
-                'name': req.body.newGroupName,
-                'admins':[],
-                'members':[]
-            }
-            g.push(newGroup)
-            readData.groups = g;
-            let json = JSON.stringify(readData);
-            
-            // Write the updated data to the JSON file.
-            fs.writeFile(dataFile, json, dataFormat, function(err, data){
-                res.send(true);
-                console.log("Created new group: " + req.body.newGroupName);
-            });
-        });
-    }
-})
- 
 app.post('/api/channels', async (req, res) => {
     // Params
     let groupName = req.body.group;
