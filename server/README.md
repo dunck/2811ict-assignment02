@@ -19,6 +19,7 @@ Sockets are received on `http://localhost:5000`, with the following events imple
 
 ### Routes
 This module exposes the following routes:
+
 |Route|Description|
 |-|-|
 |`GET /`, `GET /home`|Points to `index.html` - exists as redunancy for the router outlet.|
@@ -33,6 +34,7 @@ This module exposes the following routes:
 
 ## login.js
 This module exposes the following functions:
+
 |Function|Description|
 |-|-|
 |`findUser(username, password)`|Returns a truthy value to determine whether a user login attempt was successful. No ticket needed. Needs a connection to MongoDB.|
@@ -40,6 +42,7 @@ This module exposes the following functions:
 
 ## groups.js
 This module exposes the following:
+
 |Function|Description|
 |-|-|
 |`getGroups(username)`|Returns all groups associated with the username. No ticket needed. Needs a connection to MongoDB.|
@@ -48,6 +51,7 @@ This module exposes the following:
 
 ## channels.js
 This module exposes the following:
+
 |Function|Description|
 |-|-|
 |`getChannels(username, group, role)`|Returns all channels associated with the username, group & role. No ticket needed. Needs a connection to MongoDB.|
